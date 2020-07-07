@@ -37,5 +37,9 @@
   bind:close="onClose"
 >
 
+<view class="popupContent">
+  <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">微信登录</button>
+  <view bindtap="stopLogin">暂不登录</view>
+</view>
 
 </van-popup>

@@ -18,9 +18,9 @@ Page({
   },
   onShareAppMessage: function( options ){
     let shareObj = {
-　　　　title: "",        
-　　　　path: '/pages/index/index',       
-       imageUrl: '/images/tabBar/timg.jpg',  
+　　　　title: "",
+　　　　path: '/pages/index/index',
+       imageUrl: '/images/tabBar/timg.jpg',
 　　　　success: function(res){
 　　　　　　// 转发成功之后的回调
 　　　　　　if(res.errMsg == 'shareAppMessage:ok'){
