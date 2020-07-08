@@ -8,8 +8,8 @@ Component({
     active: {
       type: Number,
       value: 0
-    }
-
+    },
+       
   },
 
   /**
@@ -58,12 +58,12 @@ Component({
     tempActive: 0
   },
   lifetimes: { // 生命周期
-    ready: function() {
-      if (app.globalData.token !== '') {
+    ready: function () {
+      if(app.globalData.token !==''){
         this.setData({
-          isLogin: 3
+          isLogin:3
         })
-      } else if (app.globalData.userInfo !== null) {
+      } else if (app.globalData.userInfo !== null){
         this.setData({
           isLogin: 1
         })
@@ -75,12 +75,19 @@ Component({
    */
   methods: {
     onChange(event) {
-      this.setData({ active: event.detail, tempActive: this.data.active });
+      this.setData({
+        active: event.detail,
+        tempActive: this.data.active
+      });
       const item = this.data.menu[event.detail]
-      if (item.requiredLogin && app.globalData.token==''){
-        this.setData({ requiredLogin: true })
-        if (app.globalData.userInfo !==null){
-          this.setData({ isLogin: 1 })
+      if (item.requiredLogin && app.globalData.token == '') {
+        this.setData({
+          requiredLogin: true
+        })
+        if (app.globalData.userInfo !== null) {
+          this.setData({
+            isLogin: 1
+          })
         }
       }else{
         if (event.detail !== this.data.tempActive){
@@ -89,28 +96,36 @@ Component({
             complete: function () {
             }
           })
-        }
-
+        }       
+      
       }
-
+     
     },
-    checkAuthorization(){//检测是否已经授权
-        wx.getSetting({
-          success:(setingres)=> {
-            wx.hideLoading()
-            if (setingres.authSetting['scope.userInfo']) {//已经授权获取用户信息
-                wx.getUserInfo({
+    checkAuthorization() { //检测是否已经授权
+      wx.getSetting({
+        success: (setingres) => {
+          wx.hideLoading()
+          if (setingres.authSetting['scope.userInfo']) { //已经授权获取用户信息
+            wx.getUserInfo({
+              success: (res) => {
+                this.userLogin(res)
+              },
+              fail: () => {
+                wx.showModal({
+                  showCancel: false,
+                  content: '获取用户信息失败,请重新点击底部菜单',
                   success: (res) => {
-                    this.userLogin(res)
-                  },
-                  fail: () => {
-
+                    this.setData({
+                      isLogin: 0
+                    })
                   }
                 })
-            }
-
+              }
+            })
           }
-        })
+
+        }
+      })
 
     },
 
@@ -175,26 +190,18 @@ Component({
           console.log(res)
           if (res.code) {
             //发起网络请求
-            this.setData({
-              code: res.code
-            })
-            if (this.data.isLogin == 0) {
+            this.setData({ code: res.code})   
+            if(this.data.isLogin==0){
               this.checkAuthorization()
-            } else if (this.data.isLogin == 1) {
+            }else if (this.data.isLogin == 1) {
               this.userLogin(data)
             }
 
 
           }
         },
-        fail: function(res) {
-          wx.showModal({
-            showCancel: false,
-            content: '登录失败',
-            success: (res) => {
+        fail: function (res) {
 
-            }
-          })
         }
       })
 
@@ -207,7 +214,7 @@ Component({
       }else{
         this.setData({ active: this.data.tempActive});
       }
-
+      
     },
     getPhoneNumber(e) {//获取电话信息
       if (e.detail.errMsg ==='getPhoneNumber:ok'){
@@ -216,7 +223,7 @@ Component({
       }else{
         this.setData({ active: this.data.tempActive,isLogin:1,requiredLogin:false });
       }
-
+     
     },
     stopLogin(){
       wx.redirectTo({
@@ -244,7 +251,7 @@ Component({
         code: this.data.code,
         encrypteData: data.encryptedData,
         iv: data.iv
-      }
+      }  
       wx.request({
         method: 'post',
         url: app.globalData.baseUrl + '/remote/oauth/minipro/login',
