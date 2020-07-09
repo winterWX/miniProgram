@@ -8,8 +8,8 @@ Component({
     active: {
       type: Number,
       value: 0
-    },
-       
+    }
+
   },
 
   /**
@@ -58,12 +58,12 @@ Component({
     tempActive: 0
   },
   lifetimes: { // 生命周期
-    ready: function () {
-      if(app.globalData.token !==''){
+    ready: function() {
+      if (app.globalData.token !== '') {
         this.setData({
-          isLogin:3
+          isLogin: 3
         })
-      } else if (app.globalData.userInfo !== null){
+      } else if (app.globalData.userInfo !== null) {
         this.setData({
           isLogin: 1
         })
@@ -89,62 +89,6 @@ Component({
             isLogin: 1
           })
         }
-      }else{
-        if (event.detail !== this.data.tempActive){
-          wx.redirectTo({
-            url: item.url,
-            complete: function () {
-            }
-          })
-        }       
-      
-      }
-     
-    },
-    checkAuthorization() { //检测是否已经授权
-      wx.getSetting({
-        success: (setingres) => {
-          wx.hideLoading()
-          if (setingres.authSetting['scope.userInfo']) { //已经授权获取用户信息
-            wx.getUserInfo({
-              success: (res) => {
-                this.userLogin(res)
-              },
-              fail: () => {
-                wx.showModal({
-                  showCancel: false,
-                  content: '获取用户信息失败,请重新点击底部菜单',
-                  success: (res) => {
-                    this.setData({
-                      isLogin: 0
-                    })
-                  }
-                })
-              }
-            })
-          }
-
-        }
-      })
-
-    },
-
-    onLogin(data) {//登录
-      this.setData({
-        active: event.detail,
-        tempActive: this.data.active
-      });
-      const item = this.data.menu[event.detail]
-      if (item.requiredLogin && app.globalData.token == '') {
-
-        if (app.globalData.userInfo !== null) {
-          this.setData({
-            isLogin: 1
-          })
-          wx.navigateTo({
-            url: '../login/index?url=' + this.data.menu[this.data.active].url,
-          })
-        }
       } else {
         if (event.detail !== this.data.tempActive) {
           wx.redirectTo({
@@ -156,11 +100,11 @@ Component({
       }
 
     },
-    checkAuthorization() { //检测是否已经授权
+    checkAuthorization() { //检测是否已经授权      
       wx.getSetting({
         success: (setingres) => {
           wx.hideLoading()
-          if (setingres.authSetting['scope.userInfo']) { //已经授权获取用户信息
+          if (setingres.authSetting['scope.userInfo']) { //已经授权获取用户信息             
             wx.getUserInfo({
               success: (res) => {
                 this.userLogin(res)
@@ -184,53 +128,36 @@ Component({
 
     },
 
-    onLogin(data) { //登录
+    onLogin(data) { //登录     
       wx.login({
         success: (res) => {
           console.log(res)
           if (res.code) {
             //发起网络请求
-            this.setData({ code: res.code})   
-            if(this.data.isLogin==0){
+            this.setData({
+              code: res.code
+            })
+            if (this.data.isLogin == 0) {
               this.checkAuthorization()
-            }else if (this.data.isLogin == 1) {
+            } else if (this.data.isLogin == 1) {
               this.userLogin(data)
             }
 
 
           }
         },
-        fail: function (res) {
+        fail: function(res) {
+          wx.showModal({
+            showCancel: false,
+            content: '登录失败',
+            success: (res) => {
 
+            }
+          })
         }
       })
 
     },
-    getUserInfo(e){//获取用户信息
-    console.log(e)
-      if (e.detail.userInfo){
-        this.setData({ requiredLogin: true })
-        this.onLogin(e.detail)
-      }else{
-        this.setData({ active: this.data.tempActive});
-      }
-      
-    },
-    getPhoneNumber(e) {//获取电话信息
-      if (e.detail.errMsg ==='getPhoneNumber:ok'){
-        this.setData({ isLogin: 2, requiredLogin: false })
-        this.onLogin(e.detail)
-      }else{
-        this.setData({ active: this.data.tempActive,isLogin:1,requiredLogin:false });
-      }
-     
-    },
-    stopLogin(){
-      wx.redirectTo({
-        url: '../index/index'
-      })
-    },
-    userLogin(data){
     getUserInfo(e) { //获取用户信息
       console.log(e)
       if (e.detail.userInfo) {
@@ -244,14 +171,11 @@ Component({
     },
 
     userLogin(data) {
-      wx.showLoading({
-        title: 'loading...',
-      })
       const parms = {
         code: this.data.code,
         encrypteData: data.encryptedData,
         iv: data.iv
-      }  
+      }
       wx.request({
         method: 'post',
         url: app.globalData.baseUrl + '/remote/oauth/minipro/login',
@@ -265,9 +189,6 @@ Component({
             this.setData({
               isLogin: 1
             })
-            wx.navigateTo({
-              url: '../login/index?url='+this.data.menu[this.data.active].url,
-            })
           } else {
             wx.showModal({
               showCancel: false,
@@ -275,7 +196,7 @@ Component({
               success: (res) => {}
             })
           }
-        wx.hideLoading()
+
         }
       })
 
