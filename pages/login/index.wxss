@@ -24,8 +24,6 @@
   line-height: normal;
   letter-spacing: normal;
   color: rgba(0, 0, 0, 0.85);
-  text-align: left;
-  width: 100%;
 }
 .footer{
   position: fixed;
@@ -60,7 +58,6 @@
   color: #333333;
   background-color: transparent;
   margin-right: 30rpx;
-  margin-left:0rpx;
  
 }
 .footer button:last-child{

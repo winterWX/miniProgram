@@ -5,7 +5,6 @@
   inactive-color="#000"
   bind:change="onChange"
   z-index="100"
-  class="hase_tabbar"
 >
 <block  wx:for="{{ menu }}" wx:key="index">
   <van-tabbar-item class="{{((isLogin===0 ||isLogin===1 )&&(item.requiredLogin===true))?'tabbar-item-login':''}}">
@@ -13,13 +12,13 @@
         slot="icon"
         src="{{ item.iconPath }}"
         mode="aspectFit"
-        style="width: 22px; height: 22px;"
+        style="width: 20px; height: 20px;"
       />
       <image
         slot="icon-active"
         src="{{ item.activeIconPath }}"
         mode="aspectFit"
-        style="width: 22px; height: 22px;"
+        style="width: 20px; height: 20px;"
       />
       
        {{item.text}}

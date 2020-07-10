@@ -18,36 +18,36 @@ Component({
   data: {
     menu: [{
         "text": "首页",
-        "iconPath": "../../images/tabBar/index.png",
-        "activeIconPath": "../../images/tabBar/index_on.png",
+        "iconPath": "../../images/index_on.png",
+        "activeIconPath": "../../images/index_on.png",
         "url": "../index/index",
         "requiredLogin": false
       },
       {
         "text": "活动",
-        "iconPath": "../../images/tabBar/exercise_default.png",
-        "activeIconPath": "../../images/tabBar/exercise.png",
+        "iconPath": "../../images/camera.png",
+        "activeIconPath": "../../images/camera.png",
         "url": "../activity/index",
         "requiredLogin": true
       },
       {
         "text": "优惠商城",
-        "iconPath": "../../images/tabBar/insurance_default.png",
-        "activeIconPath": "../../images/tabBar/insurance.png",
+        "iconPath": "../../images/star.png",
+        "activeIconPath": "../../images/star.png",
         "url": "../shop/index",
         "requiredLogin": true
       },
       {
         "text": "医疗服务",
-        "iconPath": "../../images/tabBar/inquiry_default.png",
-        "activeIconPath": "../../images/tabBar/inquiry.png",
+        "iconPath": "../../images/like.png",
+        "activeIconPath": "../../images/like.png",
         "url": "../medicalServices/index",
         "requiredLogin": true
       },
       {
         "text": "我的",
-        "iconPath": "../../images/tabBar/mine_default.png",
-        "activeIconPath": "../../images/tabBar/mine.png",
+        "iconPath": "../../images/like.png",
+        "activeIconPath": "../../images/like.png",
         "url": "../mine/index",
         "requiredLogin": true
       },
@@ -81,13 +81,14 @@ Component({
       });
       const item = this.data.menu[event.detail]
       if (item.requiredLogin && app.globalData.token == '') {
-        this.setData({
-          requiredLogin: true
-        })
+        
         if (app.globalData.userInfo !== null) {
           this.setData({
             isLogin: 1
           })
+          wx.navigateTo({
+            url: '../login/index?url=' + this.data.menu[this.data.active].url,
+          })         
         }
       } else {
         if (event.detail !== this.data.tempActive) {
@@ -141,7 +142,7 @@ Component({
               this.checkAuthorization()
             } else if (this.data.isLogin == 1) {
               this.userLogin(data)
-            }
+            } 
 
 
           }
@@ -160,7 +161,7 @@ Component({
     },
     getUserInfo(e) { //获取用户信息
       console.log(e)
-      if (e.detail.userInfo) {
+      if (e.detail.userInfo) {       
         this.onLogin(e.detail)
       } else {
         this.setData({
@@ -169,8 +170,11 @@ Component({
       }
 
     },
-
+    
     userLogin(data) {
+      wx.showLoading({
+        title: 'loading...',
+      })
       const parms = {
         code: this.data.code,
         encrypteData: data.encryptedData,
@@ -189,6 +193,9 @@ Component({
             this.setData({
               isLogin: 1
             })
+            wx.navigateTo({
+              url: '../login/index?url='+this.data.menu[this.data.active].url,
+            })
           } else {
             wx.showModal({
               showCancel: false,
@@ -196,11 +203,11 @@ Component({
               success: (res) => {}
             })
           }
-
+        wx.hideLoading()
         }
       })
 
     },
-
+    
   }
 })
