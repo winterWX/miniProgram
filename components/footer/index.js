@@ -1,6 +1,9 @@
 // components/footer/index.js
 const app = getApp();
 Component({
+  options: {
+    styleIsolation: 'shared',
+  },
   /**
    * 组件的属性列表
    */
@@ -88,6 +91,9 @@ Component({
           this.setData({
             isLogin: 1
           })
+          wx.navigateTo({
+            url: '../login/index?url=' + this.data.menu[this.data.active].url,
+          })
         }
       } else {
         if (event.detail !== this.data.tempActive) {
@@ -128,9 +134,13 @@ Component({
 
     },
 
-    onLogin(data) { //登录     
+    onLogin(data) { //登录
+      wx.showLoading({
+        title: 'loading...',
+      })     
       wx.login({
         success: (res) => {
+          wx.hideLoading() 
           console.log(res)
           if (res.code) {
             //发起网络请求
@@ -171,6 +181,9 @@ Component({
     },
 
     userLogin(data) {
+      wx.showLoading({
+        title: 'loading...',
+      })
       const parms = {
         code: this.data.code,
         encrypteData: data.encryptedData,
@@ -189,6 +202,9 @@ Component({
             this.setData({
               isLogin: 1
             })
+            wx.navigateTo({
+              url: '../login/index?url=' + this.data.menu[this.data.active].url,
+            })
           } else {
             wx.showModal({
               showCancel: false,
@@ -196,7 +212,7 @@ Component({
               success: (res) => {}
             })
           }
-
+          wx.hideLoading()
         }
       })
 
